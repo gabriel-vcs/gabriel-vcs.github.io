@@ -1,6 +1,81 @@
-#main {
-  font-size: 50px;
-  background-color: aqua;
-  height: 100vh;
-  width: 100vw;
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap");
+
+body {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.5)
+    ),
+    url("../img/typewriter.jfif");
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "Roboto Mono", sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+#game {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    ),
+    url("../img/notebook.jpg");
+  border: 5px solid #000;
+  border-radius: 25px;
+  height: 90vh;
+  width: 45vw;
+  flex-grow: 2;
+  margin: 0 auto;
+  padding: 0;
+  margin: 40px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+#player {
+  object-fit: scale-down;
+  position: relative;
+  top: 45%;
+  left: 50%;
+  height: 10%;
+  width: 10%;
+  object-fit: contain;
+  margin-top: -25px;
+  margin-left: -25px;
+  overflow: hidden;
+  transform: rotate(45deg);
+}
+
+#panel {
+  background: rgb(204, 84, 87);
+  border: 2px solid rgb(134, 59, 61);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  margin: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+
+.box {
+  font-size: 25px;
+}
+
+.typearea {
+  width: 200px;
+  height: 30px;
+  flex-grow: 2;
+}
+
+.score,
+.health {
+  width: 80px;
+  height: 30px;
+  flex-grow: 1;
+  text-align: right;
 }
