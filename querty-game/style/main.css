@@ -5,9 +5,7 @@ body {
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("../img/typewriter.jfif");
-  background-position: right;
-  background-repeat: no-repeat;
+    url("../img/typewriter.jfif") no-repeat left top;
   background-size: cover;
   font-family: "Roboto Mono", sans-serif;
   font-size: 20px;
