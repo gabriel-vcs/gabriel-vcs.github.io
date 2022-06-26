@@ -37,14 +37,14 @@ h1 {
 
 #player {
   object-fit: scale-down;
-  position: relative;
+  position: absolute;
   top: 45%;
   left: 50%;
   height: 10%;
   width: 10%;
   object-fit: fill;
   margin-top: -25px;
-  margin-left: -25px;
+  margin-left: -45px;
   overflow: hidden;
   transform: rotate(45deg);
   overflow: hidden;
@@ -52,7 +52,6 @@ h1 {
 
 #panel {
   background: rgb(204, 84, 87);
-  border: 2px solid rgb(134, 59, 61);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -63,6 +62,13 @@ h1 {
   flex-flow: row nowrap;
   justify-content: space-between;
   align-content: flex-start;
+  padding: 0;
+}
+
+.word {
+  font-size: 1em;
+  color: red;
+  position: absolute;
 }
 
 .box {
