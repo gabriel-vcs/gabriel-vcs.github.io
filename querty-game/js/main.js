@@ -10,17 +10,14 @@ class Game {
   start() {
     this.createListeners();
     let timer = 0;
-    const enemy = new Word();
-    this.words.push(enemy);
+    this.words.push(new Word());
     this.intervalId = setInterval(() => {
-      // timer++;
-      // if (timer % (60 / this.speed) === 0) {
-      // this.enemies = new Enemy();
-      // }
-      this.words.forEach((word) => {
-        // enemy.
-      });
-    }, 50);
+      timer++;
+      if ((timer * 50) % 1000 === 0) {
+      }
+      // this.words.forEach((word) => {
+      // });
+    }, 1000 / 50);
   }
   createListeners() {
     window.addEventListener("keydown", (event) => {
@@ -33,35 +30,44 @@ class Game {
 }
 
 class DomElement {
-  constructor() {
-    this.elm = null;
-    this.position = [0, 0];
-    this.orientation = 0;
-    this.elm = this.getNewElement();
+  constructor(tagName, position, rotation) {
+    this.rotation += 5;
+    if (tagName) {
+      this.elm = this.getNewElement(tagName);
+    } else {
+      this.elm = null;
+    }
   }
-  getNewElement() {
-    const divElm = document.createElement("div");
+  getNewElement(tagName) {
+    console.log("this.position>>>", this.position);
+    // const elm = document.createElement(tagName);
+    // elm.position = this.getRndPosition();
+  }
+  getRndPosition() {}
+  rotate() {
+    this.elm.style.transform = "rotate(" + this.rotation + "deg)";
   }
 }
 
 class Player extends DomElement {
   constructor() {
-    super();
+    super(null, [0, 0], 45);
     this.health = 100;
     this.points = 0;
     this.elm = document.getElementById("player");
+    this.rotation = 45;
   }
 }
 
 class Word extends DomElement {
   constructor() {
-    super();
+    super("span");
     this.word = this.getRndWord();
     this.distanceToPlayer = 100;
     this.orientation = 0;
   }
   getRndWord() {
-    console.log(words[Math.floor(Math.random() * words.length)]);
+    return words[Math.floor(Math.random() * words.length)];
   }
 }
 
