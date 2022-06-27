@@ -17,41 +17,41 @@ Definition:
 - Clases
 
   - Game
-    - properties
-      	- player
-        - enemies[]
-        - level
-		- language (optional)
-		- useNumbers? (optional)
-		- useSpecialchars? (optional)
-	- methods
-		- increaseLevel
+    - properties - player
+      - enemies[]
+      - level
+    - Uppercase (optional)
+    - language (optional)
+    - useNumbers? (optional)
+    - useSpecialchars? (optional)
+  - methods
+    - increaseLevel
   - Enemy
     - properties
-		- word
-		- distanceToPlayer
-		- orientation 
-		- image (optional)		
-	-  method
-		- getRndOrigen()
-		- getRndWord()
-		- getNextPosition() (calculate based on distance to player)
-		- getRandomImage() (optional)
-	
+    - word
+    - distanceToPlayer
+    - orientation
+    - image (optional)
+  - method
+
+    - getRndOrigen()
+    - getRndWord()
+    - getNextPosition() (calculate based on distance to player)
+    - getRandomImage() (optional)
+
   - Player
+
     - properties
-		- orientation
-		- health
-		- points (every enemy kill = length word)
+    - orientation
+    - health
+    - points (every enemy kill = length word)
 
   - DomElement
-	- properties
-		- position[x.y]
-		- orientation
-	- methods
-		- getOrientation(origen, destination)
-		
-  
+  - properties
+    - position[x.y]
+    - orientation
+  - methods
+    - getOrientation(origen, destination)
 
 Functionality:
 

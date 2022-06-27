@@ -1,4 +1,4 @@
-const words = [
+const data = [
   "a",
   "abandon",
   "ability",

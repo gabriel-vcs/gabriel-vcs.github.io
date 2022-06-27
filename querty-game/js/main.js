@@ -12,21 +12,31 @@ class Game {
 
     let timer = 0;
     this.words.push(new Word(this.level));
-    this.intervalId = setInterval(() => {
-      timer++;
-      if ((timer * 50) % 3000 === 0) {
-        this.words.push(new Word(this.level));
-        this.words.shift().elm.remove();
-      }
-      this.words.forEach((word) => {
-        word.moveElement();
-      });
-    }, 1000 / 50);
+    // this.intervalId = setInterval(() => {
+    //   timer++;
+    //   if ((timer * 50) % 20000 === 0) {
+    //     const word = new Word(this.level);
+    //     this.words.push(word);
+    //     // this.words.shift().elm.remove();
+    //   }
+    //   // if ((timer * 50) % 300 === 0) {
+    //   //   this.words.forEach((word) => {
+    //   //     word.moveElement();
+    //   //   });
+    //   // }
+    // }, 1000 / 50);
   }
   createListeners() {
     window.addEventListener("keydown", (event) => {
+      console.log("event.key>>>", event.key);
       if (event.key === "Escape") {
         clearInterval(this.intervalId);
+      } else if (event.key === "n") {
+        this.words.push(new Word(this.level));
+      } else if (event.key === "m") {
+        this.words.forEach((word) => {
+          word.moveElement();
+        });
       }
     });
   }
@@ -46,7 +56,7 @@ class WordController {
     this.level = level;
     this.gridMaxXPos = 12;
     this.gridMaxYPos = 12;
-    this.marginLeft = 5;
+    this.marginLeft = 0;
     this.positionMap = this.getPositionMap();
   }
   getRndWord() {
@@ -99,33 +109,73 @@ class WordController {
 class Word extends WordController {
   constructor(level) {
     super(level);
-    this.elm = this.createNewElm();
     this.distanceToPlayer = 100;
-    this.orientation = 0;
     this.movesToPlayer = 10;
+    this.positionX = 0;
+    this.positionY = 0;
+    this.counter = 0;
+    this.elm = this.createNewElm();
   }
   createNewElm() {
-    const wordElm = document.createElement("span");
+    const wordElm = document.createElement("div");
     wordElm.className = "word";
     wordElm.innerText = this.getRndWord();
-    const rndPosition = this.getRndPosition();
-    wordElm.style.left = rndPosition[0] + "px";
-    wordElm.style.top = rndPosition[1] + "px";
+    [this.positionX, this.positionY] = this.getRndPosition();
+    wordElm.style.left = this.positionX + "px";
+    wordElm.style.top = this.positionY + "px";
     const gameElm = document.getElementById("game");
     gameElm.appendChild(wordElm);
     return wordElm;
   }
   moveElement() {
     const playerElem = document.getElementById("player");
-    console.log("this.playerElem.style.left>>>", playerElem.style.left);
-    // if (Math.abs(this.playerElem.style.left - this.elm.style.left) > 20) {
-    //   this.elm.style.left +=
-    //     (playerElem.style.left - this.elm.style.left) / this.movesToPlayer;
-    // }
-    // if (Math.abs(this.playerElem.style.top - this.elm.style.top) > 20) {
-    //   this.elm.style.top +=
-    //     (playerElem.style.top - this.elm.style.top) / this.movesToPlayer;
-    // }
+    const cssPlayerObj = window.getComputedStyle(playerElem, null);
+    const playerPositionX = +cssPlayerObj
+      .getPropertyValue("left")
+      .replace("px", "");
+    const playerPositionY = +cssPlayerObj
+      .getPropertyValue("top")
+      .replace("px", "");
+    const playerWidth = +cssPlayerObj
+      .getPropertyValue("width")
+      .replace("px", "");
+    const playerHeight = +cssPlayerObj
+      .getPropertyValue("height")
+      .replace("px", "");
+    const cssWordObj = window.getComputedStyle(this.elm, null);
+    const wordWidth = +cssWordObj.getPropertyValue("width").replace("px", "");
+    const wordHeight = +cssWordObj.getPropertyValue("height").replace("px", "");
+
+    console.log("playerPositionX>>>", playerPositionX);
+    console.log("this.positionX>>>", this.positionX);
+    console.log(
+      "playerPositionX - this.positionX>>>",
+      Math.abs(playerPositionX - this.positionX)
+    );
+    console.log("playerWidth>>>", playerWidth);
+    console.log(
+      "playerPositionY - this.positionY>>>",
+      Math.abs(playerPositionY - this.positionY)
+    );
+    console.log("playerHeight>>>", playerHeight);
+    if (
+      Math.abs(playerPositionX - this.positionX) > playerWidth / 2 ||
+      Math.abs(playerPositionY - this.positionY) > playerHeight
+    ) {
+      this.positionX += (playerPositionX - this.positionX) / this.movesToPlayer;
+      this.positionY += (playerPositionY - this.positionY) / this.movesToPlayer;
+    } else {
+      this.counter++;
+      this.elm.innerText = "";
+      const img = document.createElement("img");
+      img.src = "../img/explosion.png";
+      this.elm.appendChild(img);
+    }
+    this.elm.style.left = this.positionX + "px";
+    this.elm.style.top = this.positionY + "px";
+    if (this.counter >= 4) {
+      this.elm.remove();
+    }
   }
 }
 
