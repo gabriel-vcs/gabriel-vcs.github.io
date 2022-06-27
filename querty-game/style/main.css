@@ -40,11 +40,11 @@ h1 {
   position: absolute;
   top: 45%;
   left: 50%;
-  height: 10%;
-  width: 10%;
+  height: 6%;
+  width: auto;
   object-fit: fill;
   margin-top: -25px;
-  margin-left: -45px;
+  margin-left: -25px;
   overflow: hidden;
   transform: rotate(45deg);
   overflow: hidden;
@@ -65,26 +65,59 @@ h1 {
   padding: 0;
 }
 
+#panel span {
+  font-size: 0.8em;
+}
+
 .word {
-  font-size: 1em;
+  font-size: 1vh;
   color: red;
   position: absolute;
 }
 
 .box {
-  font-size: 25px;
+  font-size: 1.1em;
 }
 
 .typearea {
-  width: 200px;
+  width: 40%;
   height: 30px;
-  flex-grow: 2;
+  flex-grow: 3;
 }
 
 .score,
 .health {
-  width: 80px;
+  width: 20%;
   height: 30px;
   flex-grow: 1;
   text-align: right;
+}
+
+@media screen and (max-width: 1024px) {
+  h1 {
+    font-size: 2em;
+  }
+  #game {
+    width: 70vw;
+  }
+  #panel span {
+    font-size: 0.8em;
+  }
+  .box {
+    font-size: 1em;
+  }
+}
+@media screen and (max-width: 500px) {
+  h1 {
+    font-size: 1.2em;
+  }
+  #game {
+    width: 95vw;
+  }
+  #panel span {
+    font-size: 0.6em;
+  }
+  .box {
+    font-size: 0.8em;
+  }
 }
