@@ -28,7 +28,6 @@ class Game {
   }
   createListeners() {
     window.addEventListener("keydown", (event) => {
-      console.log("event.key>>>", event.key);
       if (event.key === "Escape") {
         clearInterval(this.intervalId);
       } else if (event.key === "n") {
@@ -113,6 +112,7 @@ class Word extends WordController {
     this.movesToPlayer = 10;
     this.positionX = 0;
     this.positionY = 0;
+    this.hasExplode = false;
     this.counter = 0;
     this.elm = this.createNewElm();
   }
@@ -129,50 +129,40 @@ class Word extends WordController {
   }
   moveElement() {
     const playerElem = document.getElementById("player");
-    const cssPlayerObj = window.getComputedStyle(playerElem, null);
-    const playerPositionX = +cssPlayerObj
-      .getPropertyValue("left")
-      .replace("px", "");
-    const playerPositionY = +cssPlayerObj
-      .getPropertyValue("top")
-      .replace("px", "");
-    const playerWidth = +cssPlayerObj
-      .getPropertyValue("width")
-      .replace("px", "");
-    const playerHeight = +cssPlayerObj
-      .getPropertyValue("height")
-      .replace("px", "");
-    const cssWordObj = window.getComputedStyle(this.elm, null);
-    const wordWidth = +cssWordObj.getPropertyValue("width").replace("px", "");
-    const wordHeight = +cssWordObj.getPropertyValue("height").replace("px", "");
+    let { left, top, width, height } = playerElem.getBoundingClientRect();
 
-    console.log("playerPositionX>>>", playerPositionX);
-    console.log("this.positionX>>>", this.positionX);
-    console.log(
-      "playerPositionX - this.positionX>>>",
-      Math.abs(playerPositionX - this.positionX)
-    );
-    console.log("playerWidth>>>", playerWidth);
-    console.log(
-      "playerPositionY - this.positionY>>>",
-      Math.abs(playerPositionY - this.positionY)
-    );
-    console.log("playerHeight>>>", playerHeight);
-    if (
-      Math.abs(playerPositionX - this.positionX) > playerWidth / 2 ||
-      Math.abs(playerPositionY - this.positionY) > playerHeight
-    ) {
-      this.positionX += (playerPositionX - this.positionX) / this.movesToPlayer;
-      this.positionY += (playerPositionY - this.positionY) / this.movesToPlayer;
+    const playerCenterX = left + width / 2;
+    const playerCenterY = top + height / 2;
+    const playerWidth = width;
+    ({ left, top, width, height } = this.elm.getBoundingClientRect());
+    const elmCenterX = left + width / 2;
+    const elmCenterY = top + height / 2;
+    const elmWidth = width;
+
+    const dx = playerCenterX - elmCenterX;
+    const dy = playerCenterY - elmCenterY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (!this.hasExplode && distance > (playerWidth + elmWidth) / 2) {
+      this.positionX += (playerCenterX - elmCenterX) / this.movesToPlayer;
+      this.positionY += (playerCenterY - elmCenterY) / this.movesToPlayer;
+
+      this.elm.style.left = this.positionX + "px";
+      this.elm.style.top = this.positionY + "px";
     } else {
       this.counter++;
-      this.elm.innerText = "";
       const img = document.createElement("img");
+      this.elm.innerText = "";
+      this.elm.style.width = elmWidth + "px";
       img.src = "../img/explosion.png";
       this.elm.appendChild(img);
+      if (playerCenterX > elmCenterX) {
+        this.elm.style.textAlign = "right";
+      }
+
+      this.hasExplode = true;
     }
-    this.elm.style.left = this.positionX + "px";
-    this.elm.style.top = this.positionY + "px";
+
     if (this.counter >= 4) {
       this.elm.remove();
     }
