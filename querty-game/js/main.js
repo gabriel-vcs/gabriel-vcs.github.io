@@ -28,16 +28,27 @@ class Game {
   }
   createListeners() {
     window.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        clearInterval(this.intervalId);
-      } else if (event.key === "n") {
-        this.words.push(new Word(this.level));
-      } else if (event.key === "m") {
-        this.words.forEach((word) => {
-          word.moveElement();
-        });
+      switch (event.key.toLowerCase()) {
+        case "escape":
+          clearInterval(this.intervalId);
+          break;
+        case "n":
+          this.words.push(new Word(this.level));
+          break;
+        case "m":
+          this.words.forEach((word) => {
+            word.moveElement();
+          });
+          break;
+        default:
+          console.log("pressed key..." + event.key);
       }
     });
+    // document.querySelector(".box.typearea").addEventListener("keydown", (event, target) => {
+    //   if (event.key === "Enter") {
+    //     this.words.filter(word => word.rndWord === target.innerText).
+    //   }
+    // }
   }
 }
 
@@ -110,17 +121,16 @@ class Word extends WordController {
     super(level);
     this.distanceToPlayer = 100;
     this.movesToPlayer = 10;
-    this.positionX = 0;
-    this.positionY = 0;
     this.hasExplode = false;
-    this.counter = 0;
+    this.timer = 0;
+    this.rndWord = this.getRndWord();
+    [this.positionX, this.positionY] = this.getRndPosition();
     this.elm = this.createNewElm();
   }
   createNewElm() {
     const wordElm = document.createElement("div");
     wordElm.className = "word";
-    wordElm.innerText = this.getRndWord();
-    [this.positionX, this.positionY] = this.getRndPosition();
+    wordElm.innerText = this.rndWord;
     wordElm.style.left = this.positionX + "px";
     wordElm.style.top = this.positionY + "px";
     const gameElm = document.getElementById("game");
@@ -130,10 +140,10 @@ class Word extends WordController {
   moveElement() {
     const playerElem = document.getElementById("player");
     let { left, top, width, height } = playerElem.getBoundingClientRect();
-
     const playerCenterX = left + width / 2;
     const playerCenterY = top + height / 2;
     const playerWidth = width;
+
     ({ left, top, width, height } = this.elm.getBoundingClientRect());
     const elmCenterX = left + width / 2;
     const elmCenterY = top + height / 2;
@@ -143,28 +153,29 @@ class Word extends WordController {
     const dy = playerCenterY - elmCenterY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (!this.hasExplode && distance > (playerWidth + elmWidth) / 2) {
-      this.positionX += (playerCenterX - elmCenterX) / this.movesToPlayer;
-      this.positionY += (playerCenterY - elmCenterY) / this.movesToPlayer;
+    if (!this.hasExplode) {
+      if (distance > (playerWidth + elmWidth) / 2) {
+        this.timer++;
+        if (this.timer >= 2) {
+          this.positionX += (playerCenterX - elmCenterX) / this.movesToPlayer;
+          this.positionY += (playerCenterY - elmCenterY) / this.movesToPlayer;
 
-      this.elm.style.left = this.positionX + "px";
-      this.elm.style.top = this.positionY + "px";
-    } else {
-      this.counter++;
-      const img = document.createElement("img");
-      this.elm.innerText = "";
-      this.elm.style.width = elmWidth + "px";
-      img.src = "../img/explosion.png";
-      this.elm.appendChild(img);
-      if (playerCenterX > elmCenterX) {
-        this.elm.style.textAlign = "right";
+          this.elm.style.left = this.positionX + "px";
+          this.elm.style.top = this.positionY + "px";
+        }
+      } else {
+        this.hasExplode = true;
+        this.elm.innerText = ""; // to be done before adding the img
+        const img = document.createElement("img");
+        img.src = "../img/explosion.png";
+        this.elm.appendChild(img);
+        this.elm.style.width = elmWidth + "px"; //set width to have the explossion in the middle of the word
+        this.elm.style.textAlign =
+          playerCenterX > elmCenterX ? "right" : "center";
+        setTimeout(() => {
+          this.elm.remove();
+        }, 500);
       }
-
-      this.hasExplode = true;
-    }
-
-    if (this.counter >= 4) {
-      this.elm.remove();
     }
   }
 }
