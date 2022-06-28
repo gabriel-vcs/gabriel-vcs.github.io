@@ -1,8 +1,9 @@
-class WordController {
+import { data } from './data.js';
+export class WordController {
     constructor(level) {
         this.level = level;
-        this.gridMaxXPos = 12;
-        this.gridMaxYPos = 12;
+        this.gridMaxXPos = 14;
+        this.gridMaxYPos = 14;
         this.marginLeft = 0;
         this.positionMap = this.getPositionMap();
     }

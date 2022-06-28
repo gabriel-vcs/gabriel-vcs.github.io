@@ -1,123 +1,132 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700&display=swap');
 
 body {
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.5),
-      rgba(255, 255, 255, 0.5)
-    ),
-    url("../img/typewriter.jfif") no-repeat left top;
-  background-size: cover;
-  font-family: "Roboto Mono", sans-serif;
-  font-size: 20px;
-  font-weight: bold;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../img/typewriter.jfif') no-repeat left top;
+    background-size: cover;
+    font-family: 'Roboto Mono', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1 {
-  font-size: 3em;
+    font-size: 3em;
 }
 
 #game {
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.8)
-    ),
-    url("../img/notebook.jpg");
-  border: 5px solid #000;
-  border-radius: 25px;
-  height: 90vh;
-  width: 45vw;
-  padding: 0;
-  position: relative;
-  overflow: hidden;
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+        url('../img/notebook.jpg');
+    border: 5px solid #000;
+    border-radius: 25px;
+    height: 90vh;
+    width: 45vw;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
 }
 
 #player {
-  object-fit: scale-down;
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  height: 6%;
-  width: auto;
-  object-fit: fill;
-  margin-top: -25px;
-  margin-left: -25px;
-  overflow: hidden;
-  transform: rotate(45deg);
-  overflow: hidden;
+    object-fit: scale-down;
+    position: absolute;
+    border-radius: 15px;
+    top: 45%;
+    left: 50%;
+    height: 6%;
+    width: auto;
+    object-fit: fill;
+    margin-top: -25px;
+    margin-left: -25px;
+    overflow: hidden;
+    transform: rotate(0deg);
+    overflow: hidden;
 }
 
 #panel {
-  background: rgb(204, 84, 87);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  margin: 0;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-content: flex-start;
-  padding: 0;
+    background: rgb(204, 84, 87);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    margin: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    padding: 0;
 }
 
 #panel span {
-  font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 .word {
-  font-size: 1vh;
-  color: red;
-  position: absolute;
+    font-size: 1em;
+    color: red;
+    position: absolute;
+    text-align: center;
+}
+
+.bullet {
+    background-color: rgb(204, 84, 87);
+    border: 1px solid grey;
+    position: fixed;
+    transform: rotate(45deg);
 }
 
 .box {
-  font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 .typearea {
-  width: 40%;
-  height: 30px;
-  flex-grow: 3;
+    width: 40%;
+    height: 30px;
+    flex-grow: 3;
 }
 
 .score,
 .health {
-  width: 20%;
-  height: 30px;
-  flex-grow: 1;
-  text-align: right;
+    width: 20%;
+    height: 30px;
+    flex-grow: 1;
+    text-align: right;
 }
 
 @media screen and (max-width: 1024px) {
-  h1 {
-    font-size: 2em;
-  }
-  #game {
-    width: 70vw;
-  }
-  #panel span {
-    font-size: 0.8em;
-  }
-  .box {
-    font-size: 1em;
-  }
+    h1 {
+        font-size: 2em;
+    }
+    #game {
+        width: 70vw;
+    }
+    #panel span {
+        font-size: 0.8em;
+    }
+    .box {
+        font-size: 1em;
+    }
+    .word {
+        font-size: 0.8em;
+    }
 }
 @media screen and (max-width: 500px) {
-  h1 {
-    font-size: 1.2em;
-  }
-  #game {
-    width: 95vw;
-  }
-  #panel span {
-    font-size: 0.6em;
-  }
-  .box {
-    font-size: 0.8em;
-  }
+    h1 {
+        font-size: 1.2em;
+    }
+    #game {
+        width: 95vw;
+    }
+    #panel span {
+        font-size: 0.6em;
+    }
+    .box {
+        font-size: 0.8em;
+    }
+    .word {
+        font-size: 0.6em;
+    }
 }

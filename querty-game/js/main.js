@@ -1,10 +1,15 @@
+import { WordController } from './WordController.js';
+import { ShootingController } from './ShootingController.js';
+import { DomController } from './DomController.js';
+
 class Game {
     constructor() {
         this.player = new Player();
         this.words = [];
-        this.level = 4; // 1..4
-        this.speed = 1; // 1..4
+        this.level = 4; // 1,2,4
+        this.speed = 1; // 1,2,4
         this.intervalId = 0;
+        this.healthElm = document.querySelector('.box.health');
     }
 
     start() {
@@ -12,21 +17,34 @@ class Game {
 
         let timer = 0;
         this.words.push(new Word(this.level));
+
         // this.intervalId = setInterval(() => {
-        //   timer++;
-        //   if ((timer * 50) % 20000 === 0) {
-        //     const word = new Word(this.level);
-        //     this.words.push(word);
-        //     // this.words.shift().elm.remove();
-        //   }
-        //   // if ((timer * 50) % 300 === 0) {
-        //   //   this.words.forEach((word) => {
-        //   //     word.moveElement();
-        //   //   });
-        //   // }
+        //     timer++;
+        //     if ((timer * 50) % Math.floor(20000 / this.level) === 0) {
+        //         this.words.push(new Word(this.level));
+        //     }
+        //     if ((timer * 50) % Math.floor(2000 / this.speed) === 0) {
+        //         this.words.forEach((word, index) => {
+        //             word.moveElement(this.player);
+        //             if (word.hasExplode) {
+        //                 this.words.splice(index, 1);
+        //                 player.health -= Math.floor(word.rndWord.length / 2);
+        //                 if (this.player.health <= 0) {
+        //                     this.healthElm.value = 0;
+        //                     clearInterval(this.intervalId);
+        //                 } else {
+        //                     this.healthElm.value = player.health;
+        //                 }
+        //             }
+        //         });
+        //     }
         // }, 1000 / 50);
     }
     createListeners() {
+        window.addEventListener('load', (event) => {
+            this.healthElm.value = this.player.health;
+        });
+
         window.addEventListener('keydown', (event) => {
             switch (event.key.toLowerCase()) {
                 case 'escape':
@@ -37,8 +55,11 @@ class Game {
                     break;
                 case 'm':
                     this.words.forEach((word) => {
-                        word.moveElement(player);
+                        word.moveElement(this.player);
                     });
+                    break;
+                case 'enter':
+                    this.player.killWord(this.words[0]); //test
                     break;
                 default:
                     console.log('pressed key...' + event.key);
@@ -49,86 +70,86 @@ class Game {
                 this.words
                     .filter((word) => word.rndWord === event.target.value)
                     .forEach((word) => {
-                        word.explode();
-                        event.target.value = '';
+                        // this.player.killWord(word);
+                        // word.explode();
+                        // event.target.value = '';
                     });
             }
         });
     }
 }
 
-class Player {
+class Player extends DomController {
     constructor() {
+        super();
         this.health = 100;
         this.points = 0;
-        this.elm = document.getElementById('player');
+        this.centerX = 0;
+        this.centerY = 0;
+        this.domElm = document.getElementById('player');
+        this.updateRectValues();
     }
-    rotateToWord() {
-        this.rotation = 0;
+
+    killWord(word) {
+        this.rotateToWord(word);
+        const shootingController = new ShootingController(this.centerX, this.centerY);
+        shootingController.shoot(word);
     }
-    calculateRotation(word) {}
+    rotateToWord(word) {
+        const degres =
+            (Math.atan2(word.centerY - this.centerY, word.centerX - this.centerX) * 180) / Math.PI;
+        this.domElm.style.transform = `rotate(${degres + 90}deg)`;
+    }
 }
 
-class Word extends WordController {
+class Word extends DomController {
     constructor(level) {
-        super(level);
-        this.distanceToPlayer = 100;
+        super('word');
         this.movesToPlayer = 10;
         this.hasExplode = false;
         this.timer = 0;
-        this.rndWord = this.getRndWord();
-        [this.positionX, this.positionY] = this.getRndPosition();
-        this.elm = this.createNewElm();
+        this.rndWord = '';
+        this.level = level;
+        this.createWord();
     }
-    createNewElm() {
-        const wordElm = document.createElement('div');
-        wordElm.className = 'word';
-        wordElm.innerText = this.rndWord;
-        wordElm.style.left = this.positionX + 'px';
-        wordElm.style.top = this.positionY + 'px';
-        const gameElm = document.getElementById('game');
-        gameElm.appendChild(wordElm);
-        return wordElm;
+    createWord() {
+        const wordController = new WordController(this.level);
+        this.rndWord = wordController.getRndWord();
+        [this.positionX, this.positionY] = wordController.getRndPosition();
+
+        this.domElm = this.createDomElement(this.positionX, this.positionY);
+        this.domElm.innerText = this.rndWord;
+        this.updateRectValues();
+        this.domElm.style.width = this.width + 'px'; //required for the explosion to be in the middle of the word
     }
-    moveElement() {
-        const playerElem = document.getElementById('player');
-        let { left, top, width, height } = playerElem.getBoundingClientRect();
-        const playerCenterX = left + width / 2;
-        const playerCenterY = top + height / 2;
-        const playerWidth = width;
-
-        ({ left, top, width, height } = this.elm.getBoundingClientRect());
-        const elmCenterX = left + width / 2;
-        const elmCenterY = top + height / 2;
-        this.elm.style.width = width + 'px';
-
-        const dx = playerCenterX - elmCenterX;
-        const dy = playerCenterY - elmCenterY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
+    moveElement(player) {
         if (!this.hasExplode) {
-            if (distance > playerWidth) {
-                this.timer++;
-                if (this.timer >= 2) {
-                    this.positionX += (playerCenterX - elmCenterX) / this.movesToPlayer;
-                    this.positionY += (playerCenterY - elmCenterY) / this.movesToPlayer;
+            this.updateRectValues();
 
-                    this.elm.style.left = this.positionX + 'px';
-                    this.elm.style.top = this.positionY + 'px';
+            const distance = this.getDistante(player, this);
+            if (distance > player.width) {
+                this.timer++;
+                //delay before starting moving the word from the corner
+                if (this.timer > 3) {
+                    this.positionX += (player.centerX - this.centerX) / this.movesToPlayer;
+                    this.positionY += (player.centerY - this.centerY) / this.movesToPlayer;
+
+                    this.domElm.style.left = this.positionX + 'px';
+                    this.domElm.style.top = this.positionY + 'px';
                 }
             } else {
                 this.hasExplode = true;
-                this.explode();
+                this.explode(player);
             }
         }
     }
     explode() {
-        this.elm.innerText = ''; // to be done before adding the img
+        this.domElm.innerText = ''; // it needs to be done before adding the img
         const img = document.createElement('img');
         img.src = '../img/explosion.png';
-        this.elm.appendChild(img);
+        this.domElm.appendChild(img);
         setTimeout(() => {
-            this.elm.remove();
+            this.domElm.remove();
         }, 500);
     }
 }
