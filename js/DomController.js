@@ -7,6 +7,7 @@ export class DomController {
         this.centerX = 0;
         this.centerY = 0;
         this.width = 0;
+        this.height = 0;
     }
     createDomElement(positionX, positionY) {
         let domElm = document.createElement('div');
@@ -17,11 +18,12 @@ export class DomController {
         gameElm.appendChild(domElm);
         return domElm;
     }
-    updateRectValues() {
+    setSizeAndPostion() {
         let { left, top, width, height } = this.domElm.getBoundingClientRect();
         this.centerX = left + width / 2;
         this.centerY = top + height / 2;
         this.width = width;
+        this.height = height;
     }
     getDistante(elm1, elm2) {
         const dx = elm1.centerX - elm2.centerX;

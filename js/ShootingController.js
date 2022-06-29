@@ -45,7 +45,7 @@ class Bullet extends DomController {
         this.hasHit = false;
     }
     moveBullet(word, totalbullets) {
-        this.updateRectValues();
+        this.setSizeAndPostion();
         this.distance = this.getDistante(word, this);
         if (this.distance > word.width / 2) {
             this.positionX += (word.centerX - this.centerX) / totalbullets;
