@@ -12,66 +12,21 @@ https://gabriel-vcs.github.io/querty-game/index.html
 
 # Further Improvements:
 
-Definition:
-
-- Clases
-
-  - Game
-    - properties - player
-      - enemies[]
-      - level
-    - Uppercase (optional)
-    - language (optional)
-    - useNumbers? (optional)
-    - useSpecialchars? (optional)
-  - methods
-    - increaseLevel
-  - Enemy
-    - properties
-    - word
-    - distanceToPlayer
-    - orientation
-    - image (optional)
-  - method
-
-    - getRndOrigen()
-    - getRndWord()
-    - getNextPosition() (calculate based on distance to player)
-    - getRandomImage() (optional)
-
-  - Player
-
-    - properties
-    - orientation
-    - health
-    - points (every enemy kill = length word)
-
-  - DomElement
-  - properties
-    - position[x.y]
-    - orientation
-  - methods
-    - getOrientation(origen, destination)
+Fix:
+-   [x] Once words appear wait 1-2 sec for them to showup, then continue
 
 Functionality:
-
-- [ ] shooting (recommended)
-- [ ] drop different things (prizes, different types of obstacles...)
-- [ ] count points
-- [ ] improve game over
-- [ ] levels (ex. increasing speed as user moves to the next level)
-- [ ] multiple lives
-- [ ] allow moving the player up and down
-- [ ] settings (speed of the game, distance between obstacles)
-- [ ] avoid repeating code for Player and Obstacle class (inheritance)
-- [ ] prevent player from going outside
+-   [x] shooting
+-   [ ] drop different things
+-   [ ] count points
+-   [ ] improve game over
+-   [ ] settings (speed, level)
+-   [x] avoid repeating code
+-   [ ] Game Over buttom that clears the interval
 
 UX:
-
-- add images (background, player, obstacles...)
-- sound
+-   sound
 
 Code quality:
-
-- apply OOP inheritance
-- detach logic & DOM manipulation
+-   apply OOP inheritance
+-   detach logic & DOM manipulation
