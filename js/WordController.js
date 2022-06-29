@@ -49,7 +49,4 @@ export class WordController {
         }
         return positionMap;
     }
-    rotate() {
-        this.elm.style.transform = 'rotate(' + this.rotation + 'deg)';
-    }
 }

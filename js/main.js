@@ -146,7 +146,7 @@ class Word extends DomController {
     explode() {
         this.domElm.innerText = ''; // it needs to be done before adding the img
         const img = document.createElement('img');
-        img.src = '../img/explosion.png';
+        img.src = './img/explosion.png';
         this.domElm.appendChild(img);
         setTimeout(() => {
             this.domElm.remove();
