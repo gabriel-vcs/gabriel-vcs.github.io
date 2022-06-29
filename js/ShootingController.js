@@ -8,7 +8,6 @@ export class ShootingController {
         this.intervalId = 0;
     }
     shoot(word) {
-        console.log('===========', 'shoot');
         let bullets = [];
         let numBullets = 0;
         let totalHits = 0;
