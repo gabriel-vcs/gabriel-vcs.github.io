@@ -7,11 +7,10 @@ class Game {
         this.player = new Player();
         this.words = [];
         this.setup = {
-            level: 1, // 1-4
-            speed: 1, // 1-4
+            level: 3, // 1-4
             hasUppercase: false,
             hasNumber: false,
-            hasSpecialChars: true,
+            hasSpecialChars: false,
         };
         this.intervalId = 0;
         this.healthElm = document.querySelector('.box.health');
@@ -22,13 +21,14 @@ class Game {
         this.createListeners();
 
         let timer = 0;
+        this.words.push(new Word(this.setup));
 
         this.intervalId = setInterval(() => {
             timer++;
-            if ((timer * 50) % Math.floor(10000 / Math.pow(2, this.setup.speed - 1)) === 0) {
+            if ((timer * 50) % Math.floor(20000 / Math.pow(2, this.setup.level - 1)) === 0) {
                 this.words.push(new Word(this.setup));
             }
-            if ((timer * 50) % Math.floor(2000 / Math.pow(2, this.setup.speed - 1)) === 0) {
+            if ((timer * 50) % 4000 === 0) {
                 this.words.forEach((word, index) => {
                     word.moveElement(this.player);
                     if (word.hasExplode) {
@@ -36,7 +36,7 @@ class Game {
                         this.words.splice(index, 1);
                         if (this.player.health <= 0) {
                             this.healthElm.value = 0;
-                            setTimeout(() => this.gameOver(), 500);
+                            setTimeout(() => this.gameOver(), 1000);
                         } else {
                             this.healthElm.value = this.player.health;
                         }
@@ -50,15 +50,20 @@ class Game {
         this.words.forEach((word) => {
             word.domElm.remove();
         });
+        this.player.domElm.style.transform = `rotate(0deg)`;
         this.player.domElm.src = './img/game-over.jpg';
         this.player.domElm.style.height = '300px';
         this.player.setSizeAndPostion();
         this.player.updatePosition();
+        this.player.domElm.style.transform = `rotate(360deg)`;
     }
     createListeners() {
+        window.addEventListener('keydown', (event) => {
+            if (event.key.toLowerCase() === 'escape') clearInterval(this.intervalId);
+        });
         window.addEventListener('load', () => {
             this.healthElm.value = this.player.health;
-            this.textElm.focus();
+            // this.textElm.focus();
         });
 
         this.textElm.addEventListener('keydown', (event) => {
@@ -70,6 +75,11 @@ class Game {
                         event.target.value = '';
                     });
             }
+            event.stopPropagation();
+        });
+        this.textElm.addEventListener('onclick', (event) => {
+            console.log('event.key>>>', event.key);
+            event.stopPropagation();
         });
     }
 }
@@ -77,7 +87,7 @@ class Game {
 class Player extends DomController {
     constructor() {
         super();
-        this.health = 100;
+        this.health = 1;
         this.points = 0;
         this.domElm = document.getElementById('player');
         this.setSizeAndPostion();
@@ -85,6 +95,7 @@ class Player extends DomController {
     }
 
     updatePosition() {
+        const panel = document.getElementById('panel');
         this.domElm.style.marginTop = -this.height / 2 + 'px';
         this.domElm.style.marginLeft = -this.width / 2 + 'px';
     }
@@ -108,7 +119,7 @@ class Word extends DomController {
         super('word');
         this.movesToPlayer = 10;
         this.hasExplode = false;
-        this.timer = 0;
+        this.timer = setup.level;
         this.text = '';
         this.createWord(setup);
     }
@@ -139,6 +150,7 @@ class Word extends DomController {
                 }
             } else {
                 this.explode(player);
+                this.hasExplode = true;
             }
         }
     }
@@ -149,8 +161,7 @@ class Word extends DomController {
         this.domElm.appendChild(img);
         setTimeout(() => {
             this.domElm.remove();
-        }, 350);
-        this.hasExplode = true;
+        }, 250);
     }
 }
 

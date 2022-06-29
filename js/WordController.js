@@ -18,7 +18,6 @@ export class WordController {
             words.push(data[rndWordIndex]);
         }
         const asc = words.sort((a, b) => a.length - b.length);
-        console.log('words>>>', words);
         let word = asc[this.level - 1]; //for lower levels we pick up the shortest word
 
         if (this.hasUppercase) word = word.charAt(0).toUpperCase() + word.slice(1);
