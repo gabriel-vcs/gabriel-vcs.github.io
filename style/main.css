@@ -45,8 +45,8 @@ input:where([type='checkbox'], [type='radio']) {
 
 #setup {
     background-color: rgb(204, 84, 87);
-    width: 30%;
-    height: 30%;
+    width: 300px;
+    height: 350px;
     text-align: left;
     position: absolute;
     top: 45%;
