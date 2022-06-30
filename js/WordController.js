@@ -1,11 +1,64 @@
 import { data } from './data.js';
-export class WordController {
+import { DomController } from './DomController.js';
+
+export class Word extends DomController {
+    constructor(setup) {
+        super('word');
+        this.movesToPlayer = 10;
+        this.hasExplode = false;
+        this.timer = setup.level;
+        this.text = '';
+        this.createWord(setup);
+    }
+    createWord(setup) {
+        const wordController = new WordController(setup);
+        this.text = wordController.getRndWord();
+        [this.positionX, this.positionY] = wordController.getRndPosition();
+
+        this.domElm = this.createDomElement(this.positionX, this.positionY);
+        this.domElm.innerText = this.text;
+        this.setSizeAndPostion();
+        this.domElm.style.width = this.width + 'px'; //required for the explosion to be in the middle of the word
+    }
+    moveElement(player) {
+        if (!this.hasExplode) {
+            this.setSizeAndPostion();
+
+            const distance = this.getDistante(player, this);
+            if (distance > player.width) {
+                this.timer++;
+                //delay before starting moving the word from the corner
+                if (this.timer >= 5) {
+                    this.positionX += (player.centerX - this.centerX) / this.movesToPlayer;
+                    this.positionY += (player.centerY - this.centerY) / this.movesToPlayer;
+
+                    this.domElm.style.left = this.positionX + 'px';
+                    this.domElm.style.top = this.positionY + 'px';
+                }
+            } else {
+                this.explode(player);
+                this.hasExplode = true;
+            }
+        }
+    }
+    explode() {
+        this.domElm.innerText = ''; // it needs to be done before adding the img
+        const img = document.createElement('img');
+        img.src = './img/explosion.png';
+        this.domElm.appendChild(img);
+        setTimeout(() => {
+            this.domElm.remove();
+        }, 250);
+    }
+}
+
+class WordController {
     constructor(setup) {
         this.level = setup.level;
         this.hasUppercase = setup.hasUppercase;
         this.hasNumber = setup.hasNumber;
         this.hasSpecialChars = setup.hasSpecialChars;
-        this.specialChars = '!"#$%&/()\'+;:_[]{}=?,.-';
+        this.specialChars = '!"#$%&/()\'+;:_[]{}=?*,.-';
         this.gridMaxXPos = 15;
         this.gridMaxYPos = 15;
         this.marginLeft = 0;
