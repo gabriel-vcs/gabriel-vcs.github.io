@@ -11,14 +11,30 @@
     <body>
         <h1>Querty Game</h1>
         <div id="game">
-            <img id="player" src="./img/hands-typing.jpg" alt="" />
+            <div id="setup">
+                <h2>Select level:</h2>
+                <label><input type="radio" name="radio" value="1" checked />Easy</label><br />
+                <label><input type="radio" name="radio" value="2" />Medium</label><br />
+                <label><input type="radio" name="radio" value="3" />Difficult</label><br />
+                <label><input type="radio" name="radio" value="4" />Impossible</label><br /><br />
+                <h2>Select extra options:</h2>
+                <label><input type="checkbox" id="cboxOption1" />Uppercase</label><br />
+                <label><input type="checkbox" id="cboxOption2" />Numbers</label><br />
+                <label><input type="checkbox" id="cboxOption3" />Special characters</label
+                ><br /><br />
+                <h3>Press <span id="btnEnter" class="keyboardkey">Enter</span> to start</h3>
+                <br />
+                <h3>Press <span id="btnEscape" class="keyboardkey">ESC</span> "key" to exit</h3>
+            </div>
+            <img id="player" src="./img/hands-typing.jpg" alt="hands typing" />
+            <img id="gameover" src="./img/game-over.jpg" alt="game over" />
             <div id="panel">
                 <span>Type here:</span>
                 <input type="text" name="typehere" class="box typearea" />
                 <span>Points:</span>
-                <input type="text" name="score" class="box score" />
+                <input type="text" name="score" class="box score" value="0" />
                 <span>Health:</span>
-                <input type="text" name="health" class="box health" />
+                <input type="text" name="health" class="box health" value="100" />
             </div>
         </div>
         <script type="module" src="./js/main.js"></script>

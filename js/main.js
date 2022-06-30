@@ -1,99 +1,131 @@
-import { WordController } from './WordController.js';
-import { ShootingController } from './ShootingController.js';
+import { Word } from './WordController.js';
 import { DomController } from './DomController.js';
+import { ShootingController } from './ShootingController.js';
 
 class Game {
     constructor() {
-        this.player = new Player();
         this.words = [];
-        this.level = 4; // 1,2,4
-        this.speed = 1; // 1,2,4
+        this.setup = {
+            level: 1, // 1-4
+            hasUppercase: false,
+            hasNumber: false,
+            hasSpecialChars: false,
+            speed: 1, // default value (increase it to test)
+        };
         this.intervalId = 0;
-        this.healthElm = document.querySelector('.box.health');
+        this.healthDomElm = document.querySelector('.box.health');
+        this.setupDomElm = document.getElementById('setup');
+        this.gameOverDomElm = document.getElementById('gameover');
+        this.typeBoxDomElm = document.querySelector('.box.typearea');
+        this.scoreBoxDomElm = document.querySelector('.box.score');
+        this.rdBtnDomElms = document.querySelectorAll(`input[name="radio"]`);
+        this.cbox1DomElm = document.getElementById('cboxOption1');
+        this.cbox2DomElm = document.getElementById('cboxOption2');
+        this.cbox3DomElm = document.getElementById('cboxOption3');
+        this.btnEnter = document.getElementById('btnEnter');
+        this.btnEscape = document.getElementById('btnEscape');
+        this.playerElm = document.getElementById('player');
     }
-
-    start() {
-        this.createListeners();
-
-        let timer = 0;
-        this.words.push(new Word(this.level));
-
-        // this.intervalId = setInterval(() => {
-        //     timer++;
-        //     if ((timer * 50) % Math.floor(20000 / this.level) === 0) {
-        //         this.words.push(new Word(this.level));
-        //     }
-        //     if ((timer * 50) % Math.floor(2000 / this.speed) === 0) {
-        //         this.words.forEach((word, index) => {
-        //             word.moveElement(this.player);
-        //             if (word.hasExplode) {
-        //                 this.words.splice(index, 1);
-        //                 player.health -= Math.floor(word.rndWord.length / 2);
-        //                 if (this.player.health <= 0) {
-        //                     this.healthElm.value = 0;
-        //                     clearInterval(this.intervalId);
-        //                 } else {
-        //                     this.healthElm.value = player.health;
-        //                 }
-        //             }
-        //         });
-        //     }
-        // }, 1000 / 50);
-    }
-    createListeners() {
-        window.addEventListener('load', (event) => {
-            this.healthElm.value = this.player.health;
-        });
-
+    initialize() {
         window.addEventListener('keydown', (event) => {
-            switch (event.key.toLowerCase()) {
-                case 'escape':
-                    clearInterval(this.intervalId);
-                    break;
-                case 'n':
-                    this.words.push(new Word(this.level));
-                    break;
-                case 'm':
-                    this.words.forEach((word) => {
-                        word.moveElement(this.player);
-                    });
-                    break;
-                case 'enter':
-                    this.player.killWord(this.words[0]); //test
-                    break;
-                default:
-                    console.log('pressed key...' + event.key);
+            if (event.key.toLowerCase() === 'escape') {
+                clearInterval(this.intervalId);
+                this.restartGame();
             }
         });
-        document.querySelector('.box.typearea').addEventListener('keydown', (event) => {
+        this.typeBoxDomElm.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 this.words
-                    .filter((word) => word.rndWord === event.target.value)
+                    .filter((word) => word.text === event.target.value)
                     .forEach((word) => {
-                        // this.player.killWord(word);
-                        // word.explode();
-                        // event.target.value = '';
+                        this.player.killWord(word);
+                        this.scoreBoxDomElm.value = this.player.points;
+                        event.target.value = '';
                     });
             }
         });
+
+        this.btnEnter.addEventListener('click', (event) => {
+            this.start();
+            event.stopPropagation();
+        });
+    }
+    restartGame() {
+        this.words.forEach((word) => word.domElm.remove());
+        this.player.domElm.style.display = 'none';
+        this.gameOverDomElm.style.display = 'none';
+        this.typeBoxDomElm.value = '';
+        this.scoreBoxDomElm.value = '0';
+        this.healthDomElm.value = '100';
+        this.setupDomElm.style.display = 'initial';
+    }
+    start() {
+        this.setupDomElm.style.display = 'none';
+        this.playerElm.style.display = 'initial';
+        this.typeBoxDomElm.focus();
+        this.player = new Player(this.playerElm);
+
+        const newSetup = this.getSetup();
+        if (newSetup && newSetup !== {}) this.setup = newSetup;
+        this.words.push(new Word(this.setup));
+
+        let timer = 0;
+        this.intervalId = setInterval(() => {
+            timer++;
+            if ((timer * 50) % Math.floor(20000 / Math.pow(2, this.setup.level - 1)) === 0) {
+                this.words.push(new Word(this.setup));
+            }
+            if ((timer * 50) % (4000 / Math.pow(2, this.setup.speed - 1)) === 0) {
+                this.words.forEach((word, index) => {
+                    word.moveElement(this.player);
+                    if (word.hasExplode) {
+                        this.player.health -= Math.floor(word.text.length / 2);
+                        this.words.splice(index, 1);
+                        if (this.player.health <= 0) {
+                            this.healthDomElm.value = 0;
+                            setTimeout(() => this.gameOver(), 1000);
+                        } else {
+                            this.healthDomElm.value = this.player.health;
+                        }
+                    }
+                });
+            }
+        }, 1000 / 50);
+    }
+    getSetup() {
+        this.rdBtnDomElms.forEach((element) => {
+            if (element.checked) {
+                this.setup.level = element.value;
+            }
+        });
+        this.setup.hasUppercase = this.cbox1DomElm.checked;
+        this.setup.hasNumber = this.cbox2DomElm.checked;
+        this.setup.hasSpecialChars = this.cbox3DomElm.checked;
+        return this.setup;
+    }
+    gameOver() {
+        clearInterval(this.intervalId);
+        this.words.forEach((word) => {
+            word.domElm.remove();
+        });
+        this.player.domElm.style.display = 'none';
+        this.gameOverDomElm.style.display = 'initial';
     }
 }
 
 class Player extends DomController {
-    constructor() {
+    constructor(domElm) {
         super();
+        this.domElm = domElm;
         this.health = 100;
         this.points = 0;
-        this.centerX = 0;
-        this.centerY = 0;
-        this.domElm = document.getElementById('player');
-        this.updateRectValues();
+        this.setSizeAndPostion();
     }
-
     killWord(word) {
         this.rotateToWord(word);
         const shootingController = new ShootingController(this.centerX, this.centerY);
         shootingController.shoot(word);
+        this.points += word.text.length;
     }
     rotateToWord(word) {
         const degres =
@@ -102,57 +134,5 @@ class Player extends DomController {
     }
 }
 
-class Word extends DomController {
-    constructor(level) {
-        super('word');
-        this.movesToPlayer = 10;
-        this.hasExplode = false;
-        this.timer = 0;
-        this.rndWord = '';
-        this.level = level;
-        this.createWord();
-    }
-    createWord() {
-        const wordController = new WordController(this.level);
-        this.rndWord = wordController.getRndWord();
-        [this.positionX, this.positionY] = wordController.getRndPosition();
-
-        this.domElm = this.createDomElement(this.positionX, this.positionY);
-        this.domElm.innerText = this.rndWord;
-        this.updateRectValues();
-        this.domElm.style.width = this.width + 'px'; //required for the explosion to be in the middle of the word
-    }
-    moveElement(player) {
-        if (!this.hasExplode) {
-            this.updateRectValues();
-
-            const distance = this.getDistante(player, this);
-            if (distance > player.width) {
-                this.timer++;
-                //delay before starting moving the word from the corner
-                if (this.timer > 3) {
-                    this.positionX += (player.centerX - this.centerX) / this.movesToPlayer;
-                    this.positionY += (player.centerY - this.centerY) / this.movesToPlayer;
-
-                    this.domElm.style.left = this.positionX + 'px';
-                    this.domElm.style.top = this.positionY + 'px';
-                }
-            } else {
-                this.hasExplode = true;
-                this.explode(player);
-            }
-        }
-    }
-    explode() {
-        this.domElm.innerText = ''; // it needs to be done before adding the img
-        const img = document.createElement('img');
-        img.src = './img/explosion.png';
-        this.domElm.appendChild(img);
-        setTimeout(() => {
-            this.domElm.remove();
-        }, 500);
-    }
-}
-
 const game = new Game();
-game.start();
+game.initialize();

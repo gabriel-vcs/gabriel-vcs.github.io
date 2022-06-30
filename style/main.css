@@ -27,6 +27,72 @@ h1 {
     padding: 0;
     position: relative;
     overflow: hidden;
+    text-align: center;
+}
+
+input:where([type='checkbox'], [type='radio']) {
+    -webkit-appearance: value;
+    -moz-appearance: value;
+    appearance: value;
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: #fff no-repeat center center;
+    accent-color: darkgreen;
+}
+
+#setup {
+    background-color: rgb(204, 84, 87);
+    width: 300px;
+    height: 350px;
+    text-align: left;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-top: -175px;
+    margin-left: -175px;
+    padding: 15px;
+    display: initial;
+}
+
+#btnEnter {
+    cursor: pointer;
+}
+
+.keyboardkey {
+    box-shadow: rgb(132 132 132 / 0.16) 1px 1px 4px 1px;
+    text-shadow: none;
+    font-weight: bold;
+    font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+    font-size: 14px;
+    padding: 0.2em 1em;
+    border: 1px solid;
+    border-color: #d6d6d6 #b4b4b4 #b4b4b4 #d6d6d6;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    background-image: -moz-linear-gradient(top, #fcfcfc, #e0e0e0);
+    background-image: -o-linear-gradient(top, #fcfcfc, #e0e0e0);
+    background-image: -webkit-linear-gradient(top, #fcfcfc, #e0e0e0);
+    background-image: linear-gradient(top, #fcfcfc, #e0e0e0);
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+#btnEnter:active {
+    border: 3px solid white;
+    user-select: none;
+    -moz-user-select: none;
+}
+
+#setup h3 {
+    line-height: 1.5;
 }
 
 #player {
@@ -41,8 +107,43 @@ h1 {
     margin-top: -25px;
     margin-left: -25px;
     overflow: hidden;
-    transform: rotate(0deg);
     overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    display: none;
+}
+
+#gameover {
+    object-fit: scale-down;
+    position: absolute;
+    border-radius: 15px;
+    top: 45%;
+    left: 50%;
+    height: 300px;
+    width: auto;
+    object-fit: fill;
+    margin-top: -125px;
+    margin-left: -200px;
+    display: none;
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-name: rotation;
+    animation-name: rotation;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+@keyframes rotation {
+    from {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+    }
+
+    to {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+    }
 }
 
 #panel {

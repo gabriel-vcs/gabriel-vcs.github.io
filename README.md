@@ -12,66 +12,49 @@ https://gabriel-vcs.github.io/querty-game/index.html
 
 # Further Improvements:
 
-Definition:
-
-- Clases
-
-  - Game
-    - properties - player
-      - enemies[]
-      - level
-    - Uppercase (optional)
-    - language (optional)
-    - useNumbers? (optional)
-    - useSpecialchars? (optional)
-  - methods
-    - increaseLevel
-  - Enemy
-    - properties
-    - word
-    - distanceToPlayer
-    - orientation
-    - image (optional)
-  - method
-
-    - getRndOrigen()
-    - getRndWord()
-    - getNextPosition() (calculate based on distance to player)
-    - getRandomImage() (optional)
-
-  - Player
-
-    - properties
-    - orientation
-    - health
-    - points (every enemy kill = length word)
-
-  - DomElement
-  - properties
-    - position[x.y]
-    - orientation
-  - methods
-    - getOrientation(origen, destination)
+Fix:
+-   [x] Once words appear wait 1-2 sec for them to showup, then continue
 
 Functionality:
-
-- [ ] shooting (recommended)
-- [ ] drop different things (prizes, different types of obstacles...)
-- [ ] count points
-- [ ] improve game over
-- [ ] levels (ex. increasing speed as user moves to the next level)
-- [ ] multiple lives
-- [ ] allow moving the player up and down
-- [ ] settings (speed of the game, distance between obstacles)
-- [ ] avoid repeating code for Player and Obstacle class (inheritance)
-- [ ] prevent player from going outside
+-   [x] shooting
+-   [x] avoid repeating code
+-   [] Add UpperCase, Numbers, Symbols
+-   [ ] drop different things
+-   [ ] count points
+-   [ ] improve game over
+-   [ ] settings (speed, level)
+-   [ ] Game Over buttom that clears the interval
 
 UX:
-
-- add images (background, player, obstacles...)
-- sound
+-   sound
 
 Code quality:
+-   apply OOP inheritance
+-   detach logic & DOM manipulation
 
-- apply OOP inheritance
-- detach logic & DOM manipulation
+
+# TIPS
+
+To  be able to debug easily add this event listener:
+```javascript
+        window.addEventListener('keydown', (event) => {
+            switch (event.key.toLowerCase()) {
+                case 'escape':
+                    clearInterval(this.intervalId);
+                    break;
+                case 'n':
+                    this.words.push(new Word(this.level));
+                    break;
+                case 'm':
+                    this.words.forEach((word) => {
+                        word.moveElement(this.player);
+                    });
+                    break;
+                case 'enter':
+                    this.player.killWord(this.words[0]); //test
+                    break;
+                default:
+                    console.log('pressed key...' + event.key);
+            }
+        });
+```

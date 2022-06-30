@@ -8,7 +8,6 @@ export class ShootingController {
         this.intervalId = 0;
     }
     shoot(word) {
-        console.log('===========', 'shoot');
         let bullets = [];
         let numBullets = 0;
         let totalHits = 0;
@@ -46,7 +45,7 @@ class Bullet extends DomController {
         this.hasHit = false;
     }
     moveBullet(word, totalbullets) {
-        this.updateRectValues();
+        this.setSizeAndPostion();
         this.distance = this.getDistante(word, this);
         if (this.distance > word.width / 2) {
             this.positionX += (word.centerX - this.centerX) / totalbullets;
