@@ -15,7 +15,8 @@ OOP game built with web technologies (html, css, javascript) designed to improve
 * You can exit the game by just pressing the ESC key at any moment 
 * And of course if the health counter drops to cero it will mean game over.  
 
-![Start Screen]("./img/game-start.png" “Start Screen)
+
+![Start Screen](./img/game-start.png) ![Playing the game](./img/game-play.png)
 
 # Demo
 
