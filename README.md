@@ -15,45 +15,11 @@ OOP game built with web technologies (html, css, javascript) designed to improve
 * You can exit the game by just pressing the ESC key at any moment 
 * And of course if the health counter drops to cero it will mean game over.  
 
-
+![Start Screen]("./img/game-start.png" “Start Screen)
 
 # Demo
 
-https://gabriel-vcs.github.io/quertygame/
+Find the game in this [link](https://gabriel-vcs.github.io/quertygame/)
 
 
 
-# Further Improvements:
-
-Functionality:
-- [ ] detach logic & DOM manipulation
-- [ ] add the pronuncionation sound of every word typed in order to practice listening
-- [ ] add more languages
-- [ ] add more symbols to practice coding faster
-- [ ] add images to words
-- [ ] Add detonateAll & GetFullHealth icons randomly
-
-Code quality:
--   apply OOP inheritance
--   apply clean code principles
-
-
-# TIPS
-
-To  be able to debug easily add this events listener:
-```javascript
-        window.addEventListener('keydown', (event) => {
-            switch (event.key.toLowerCase()) {
-                case 'n':
-                    this.words.push(new Word(this.level));
-                    break;
-                case 'm':
-                    this.words.forEach((word) => {
-                        word.moveElement(this.player);
-                    });
-                    break;
-                default:
-                    console.log('pressed key...' + event.key);
-            }
-        });
-```
